@@ -5,6 +5,7 @@
 }
 
 #main-header .header-content {
+    background: #fff;
     width: 100%;
     max-width: 980px;
     margin: 0 auto;
