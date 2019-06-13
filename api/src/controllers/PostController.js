@@ -10,11 +10,15 @@ class PostController {
   async store (req, res) {
     const { author, location, legend, hashtags } = req.body
     const { filename: image } = req.file
-    const post = await Post.create({ author, location, legend, hashtags, image })
 
-    req.io.emit('newPost', post)
+    try {
+      const post = await Post.create({ author, location, legend, hashtags, image })
+      req.io.emit('newPost', post)
 
-    return res.status(HTTP.CREATED).send(post)
+      return res.status(HTTP.CREATED).send(post)
+    } catch (e) {
+      return res.status(HTTP.BAD_REQUEST).send({ error: e })
+    }
   }
 }
 

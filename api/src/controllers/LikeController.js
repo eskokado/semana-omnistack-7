@@ -2,7 +2,7 @@ const Post = require('../models/Post')
 const HTTP = require('../utils/httpStatus')
 
 class LikeController {
-  async store ({ params }, res) {
+  async store ({ io, params }, res) {
     const post = await Post.findById(params.id)
 
     if (!post) {
@@ -11,6 +11,8 @@ class LikeController {
 
     post.likes += 1
     await post.save()
+
+    io.emit('newLike', post)
 
     return res.json(post)
   }

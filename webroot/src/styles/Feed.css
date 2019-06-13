@@ -41,13 +41,18 @@ footer {
     padding: 20px;
 }
 
-footer .actions {
+.actions {
     margin-bottom: 15px;
 }
 
-footer .actions img {
-    height: 25px;
-    margin-right: 10px;
+.actions svg {
+    margin-right: 20px;
+    color: #555
+}
+
+.actions .like:hover {
+    transform: scale(1.15, 1.15);
+    cursor: pointer;
 }
 
 .post-description {

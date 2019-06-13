@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { FaHeart, FaComment, FaShare, FaEllipsisH } from 'react-icons/fa'
 import Loading from '../components/Loading'
-import more from '../assets/more.svg'
-import like from '../assets/like.svg'
-import comment from '../assets/comment.svg'
-import send from '../assets/send.svg'
 import api from '../services/api'
+import io from 'socket.io-client'
 import '../styles/Feed.css'
+
+const socket = io('http://localhost:3333')
 
 function Feed () {
   const [isLoading, setIsLoading] = useState(true)
@@ -21,8 +21,29 @@ function Feed () {
   }, [])
 
   useEffect(() => {
+    listenToNewPosts()
+    listenToNewLikes()
+  }, [])
+
+  useEffect(() => {
     setIsLoading(false)
   }, [posts])
+
+  function listenToNewPosts () {
+    socket.on('newPost', newPost => {
+      setPosts(posts => [newPost, ...posts])
+    })
+  }
+
+  function listenToNewLikes () {
+    socket.on('newLike', likedPost => {
+      setPosts(posts => posts.map(post => post._id === likedPost._id ? likedPost : post))
+    })
+  }
+
+  function handleLikeClick (id) {
+    api.post(`/posts/${id}/like`)
+  }
 
   if (isLoading) {
     return <Loading />
@@ -39,16 +60,16 @@ function Feed () {
                 <span className="user-location">{post.location}</span>
               </div>
 
-              <img src={more} alt="More..." />
+              <FaEllipsisH />
             </header>
 
-            <img className="post-image" src="https://picsum.photos/500/500" alt="" />
+            <img className="post-image" src={`http://localhost:3333/files/${post.image}`} alt="" />
 
             <footer>
               <div className="actions">
-                <img src={like} alt="More..." />
-                <img src={comment} alt="More..." />
-                <img src={send} alt="More..." />
+                <FaHeart className="like" onClick={() => handleLikeClick(post._id)} size={23} />
+                <FaComment size={23} />
+                <FaShare size={23} />
               </div>
 
               <strong>{post.likes} likes</strong>
