@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "start": "env-cmd -f .env nodemon src/index.js",
     "dev": "env-cmd -f .env nodemon src/index.js"
   },
   "dependencies": {
